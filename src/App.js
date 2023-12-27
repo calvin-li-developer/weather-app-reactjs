@@ -12,10 +12,11 @@ function App() {
     if (evt.key === "Enter") {
       try {
         const response = fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
-          
+        
+        console.log(response);
         // Check if the response status is OK (200)
-        if (response.cod != 200) {
-          throw new Error(`HTTP error! Status: ${response.message}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.json().message}`);
         }
 
         // Parse the JSON response
