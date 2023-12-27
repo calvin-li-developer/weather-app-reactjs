@@ -14,8 +14,8 @@ function App() {
         const response = fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
           
         // Check if the response status is OK (200)
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.cod != 200) {
+          throw new Error(`HTTP error! Status: ${response.message}`);
         }
 
         // Parse the JSON response
@@ -23,7 +23,7 @@ function App() {
           setWeather(result)
           setQuery("");
         });
-        
+
       } catch (error) {
         console.error('Error:', error.message);
       }
