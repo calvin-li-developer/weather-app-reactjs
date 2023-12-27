@@ -10,12 +10,23 @@ function App() {
 
   const search = evt => {
     if (evt.key === "Enter") {
-      fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`)
-        .then(result => result.json())
-        .then(result => {
+      try {
+        const response = fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
+          
+        // Check if the response status is OK (200)
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the JSON response
+        response.json().then(result => {
           setWeather(result)
           setQuery("");
         });
+        
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
     }
   }
 
@@ -45,28 +56,28 @@ function App() {
           />
         </div>
         {(typeof weather.main != "undefined") ? (
-        <div>
-          <div className="location-box">
-            <div className="location">{weather.name}, {weather.sys.country}</div>
-            <div className="date">{dateBuilder(new Date())}</div>
-          </div>
-          <div className="weather-box">
-            <div className="temp">
-              {Math.round(weather.main.temp)}°C
+          <div>
+            <div className="location-box">
+              <div className="location">{weather.name}, {weather.sys.country}</div>
+              <div className="date">{dateBuilder(new Date())}</div>
             </div>
-            <div className="weather">{weather.weather[0].main}</div>
+            <div className="weather-box">
+              <div className="temp">
+                {Math.round(weather.main.temp)}°C
+              </div>
+              <div className="weather">{weather.weather[0].main}</div>
+            </div>
           </div>
-        </div>
         ) : (
           <div>
-          <div className="location-box">
-            <div className="location">Please Enter a City Name</div>
-            <div className="date"></div>
+            <div className="location-box">
+              <div className="location">Please Enter a City Name</div>
+              <div className="date"></div>
+            </div>
+            <div className="weather-box">
+              <div className="weather"></div>
+            </div>
           </div>
-          <div className="weather-box">
-            <div className="weather"></div>
-          </div>
-        </div>
         )}
       </main>
     </div>
