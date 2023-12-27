@@ -7,27 +7,28 @@ const api = {
 function App() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
+  const [defaultMessage, setdefaultMessage] = useState("Please Enter a City Name");
 
-  const search = evt => {
-    if (evt.key === "Enter") {
-      try {
-        const response = fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
+  const search = async (evt) => {
+    try {
+      if (evt.key === "Enter" && query != "") {
+        const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
         
-        console.log(response);
-        // Check if the response status is OK (200)
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.json().message}`);
-        }
-
-        // Parse the JSON response
-        response.json().then(result => {
-          setWeather(result)
+          const errorResult = await response.json();
+          setdefaultMessage(`"${query}" ${errorResult.message}`);
+          setWeather({});
           setQuery("");
-        });
-
-      } catch (error) {
-        console.error('Error:', error.message);
+          throw new Error(errorResult.message);
+        }
+        else {
+          const result = await response.json();
+          setWeather(result);
+          setQuery("");
+        }
       }
+    } catch (error) {
+      console.error('Error fetching weather data:', error.message);
     }
   }
 
@@ -72,7 +73,7 @@ function App() {
         ) : (
           <div>
             <div className="location-box">
-              <div className="location">Please Enter a City Name</div>
+              <div className="location">{defaultMessage}</div>
               <div className="date"></div>
             </div>
             <div className="weather-box">
