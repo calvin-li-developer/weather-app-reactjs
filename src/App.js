@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { debounce } from 'lodash';
 import * as XLSX from 'xlsx';
 
@@ -7,56 +7,61 @@ const api = {
   url: process.env.REACT_APP_API_URL || ''
 };
 
+const DEBOUNCE_DELAY = 300;
+const TEMPERATURE_THRESHOLD = 16;
+
 function App() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
   const [defaultMessage, setdefaultMessage] = useState("Please Enter a City Name");
 
-  const availableCityListJSON = async (city) => {
+  const isValidCity = async (city) => {
     try {
       // Fetch the Excel file from the URL
-      const response = await fetch('/assets/cities_list.xlsx');
+      const response = await fetch(`/weather-app-reactjs/assets/cities_list.xlsx`)
       const buffer = await response.arrayBuffer();
       const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
-      
+
       // Get the first sheet in the workbook
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-  
+
       // Convert the sheet to JSON
-      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 'A', raw: false });
-      
-      console.log(jsonData);
-  
-      console.log('Conversion complete. JSON data saved to cities.json');
+      const cityJSONData = XLSX.utils.sheet_to_json(sheet);
+
+      // Check if query in CityJSONData
+      const inCityJSONData = cityJSONData.some(obj => obj.name === city);
+
+      return inCityJSONData;
     } catch (e) {
-      console.error('Error fetching or converting Excel file:', e.message);
+      console.error('Error:', e);
+      return false;
     }
   };
 
-  const debouncedSearch = debounce(async (query) => {
+  const fetchWeather = debounce(async (query) => {
     try {
-      const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`) || { "cod": "404", "message": "city not found" };
+      const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
       const result = await response.json();
       setWeather(result);
-      setQuery("");
-      if (!response.ok) {
-        setdefaultMessage(`"${query}" ${result.message}`);
-        setWeather({});
-      }
     } catch (e) {
       console.log('Error fetching weather data:', e.message);
     }
-  }, 300);
+  }, DEBOUNCE_DELAY);
 
-  const handleSearch = (evt) => {
+  const handleSearch = async (evt) => {
     if (evt.key === 'Enter' && query !== '') {
-      availableCityListJSON(query);
-      debouncedSearch(query);
+      if (await isValidCity(query) == true) {
+        fetchWeather(query);
+      } else {
+        setdefaultMessage(`"${query}" city not found in database`);
+        setWeather({});
+      }
+      setQuery("");
     }
   };
 
-  const dateBuilder = (d) => {
+  const dateBuilder = useMemo(() => (d) => {
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -66,10 +71,10 @@ function App() {
     let year = d.getFullYear();
 
     return `${day} ${date}, ${month} ${year}`;
-  };
+  }, []);
 
   return (
-    <div className={`app ${typeof weather.main !== "undefined" && weather.main.temp > 16 ? "warm" : ""}`}>
+    <div className={`app ${weather.main && weather.main.temp > TEMPERATURE_THRESHOLD ? "warm" : ""}`}>
       <main>
         <div className="search-box">
           <input
