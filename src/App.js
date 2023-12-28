@@ -1,31 +1,60 @@
 import React, { useState } from 'react';
+import { debounce } from 'lodash';
+import * as XLSX from 'xlsx';
+
 const api = {
-  key: process.env.REACT_APP_API_KEY,
-  url: process.env.REACT_APP_API_URL
-}
+  key: process.env.REACT_APP_API_KEY || '',
+  url: process.env.REACT_APP_API_URL || ''
+};
 
 function App() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
   const [defaultMessage, setdefaultMessage] = useState("Please Enter a City Name");
 
-  const search = async (evt) => {
+  const availableCityListJSON = async (city) => {
     try {
-      if (evt.key === "Enter" && query !== "") {
-        const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
-        const result = await response.json();
-        setWeather(result);
-        setQuery("");
-        if (!response.ok) {
-          setdefaultMessage(`"${query}" ${result.message}`);
-          setWeather({});
-          throw new Error(result.message);
-        }        
-      }
-    } catch (error) {
-      console.error('Error fetching weather data:', error.message);
+      // Fetch the Excel file from the URL
+      const response = await fetch('/assets/cities_list.xlsx');
+      const buffer = await response.arrayBuffer();
+      const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+      
+      // Get the first sheet in the workbook
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+  
+      // Convert the sheet to JSON
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 'A', raw: false });
+      
+      console.log(jsonData);
+  
+      console.log('Conversion complete. JSON data saved to cities.json');
+    } catch (e) {
+      console.error('Error fetching or converting Excel file:', e.message);
     }
-  }
+  };
+
+  const debouncedSearch = debounce(async (query) => {
+    try {
+      const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`) || { "cod": "404", "message": "city not found" };
+      const result = await response.json();
+      setWeather(result);
+      setQuery("");
+      if (!response.ok) {
+        setdefaultMessage(`"${query}" ${result.message}`);
+        setWeather({});
+      }
+    } catch (e) {
+      console.log('Error fetching weather data:', e.message);
+    }
+  }, 300);
+
+  const handleSearch = (evt) => {
+    if (evt.key === 'Enter' && query !== '') {
+      availableCityListJSON(query);
+      debouncedSearch(query);
+    }
+  };
 
   const dateBuilder = (d) => {
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -37,19 +66,19 @@ function App() {
     let year = d.getFullYear();
 
     return `${day} ${date}, ${month} ${year}`;
-  }
+  };
 
   return (
-    <div className={(typeof weather.main != "undefined") ? ((weather.main.temp > 16) ? "app warm" : "app") : "app"}>
+    <div className={`app ${typeof weather.main !== "undefined" && weather.main.temp > 16 ? "warm" : ""}`}>
       <main>
         <div className="search-box">
           <input
             type="text"
             className="search-bar"
             placeholder="Search for a city..."
-            onChange={e => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             value={query}
-            onKeyPress={search}
+            onKeyPress={handleSearch}
           />
         </div>
         {(typeof weather.main != "undefined") ? (
@@ -79,6 +108,6 @@ function App() {
       </main>
     </div>
   );
-}
+};
 
 export default App;
