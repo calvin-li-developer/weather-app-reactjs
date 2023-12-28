@@ -14,15 +14,13 @@ function App() {
       if (evt.key === "Enter" && query !== "") {
         const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
         const result = await response.json();
+        setWeather(result);
+        setQuery("");
         if (!response.ok) {
           setdefaultMessage(`"${query}" ${result.message}`);
           setWeather({});
           throw new Error(result.message);
-        }
-        else {
-          setWeather(result);
-        }
-        setQuery("");
+        }        
       }
     } catch (error) {
       console.error('Error fetching weather data:', error.message);
