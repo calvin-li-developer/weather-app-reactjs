@@ -50,8 +50,12 @@ function App() {
   }, DEBOUNCE_DELAY);
 
   const handleSearch = async (evt) => {
-    if (evt.key === 'Enter' && query !== '') {
-      if (await isValidCity(query) == true) {
+    if (evt.key === 'Enter') {
+      if (query === '') {
+        setdefaultMessage("Please Enter a City Name");
+        setWeather({});
+      }
+      else if (await isValidCity(query) == true) {
         fetchWeather(query);
       } else {
         setdefaultMessage(`"${query}" city not found in database`);
