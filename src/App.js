@@ -11,21 +11,18 @@ function App() {
 
   const search = async (evt) => {
     try {
-      if (evt.key === "Enter" && query != "") {
+      if (evt.key === "Enter" && query !== "") {
         const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
-        
+        const result = await response.json();
         if (!response.ok) {
-          const errorResult = await response.json();
-          setdefaultMessage(`"${query}" ${errorResult.message}`);
+          setdefaultMessage(`"${query}" ${result.message}`);
           setWeather({});
-          setQuery("");
-          throw new Error(errorResult.message);
+          throw new Error(result.message);
         }
         else {
-          const result = await response.json();
           setWeather(result);
-          setQuery("");
         }
+        setQuery("");
       }
     } catch (error) {
       console.error('Error fetching weather data:', error.message);
