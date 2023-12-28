@@ -57,7 +57,8 @@ function App() {
       }
       else if (await isValidCity(query) == true) {
         fetchWeather(query);
-      } else {
+      } 
+      else {
         setdefaultMessage(`"${query}" city not found in database`);
         setWeather({});
       }
