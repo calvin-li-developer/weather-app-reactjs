@@ -8,8 +8,7 @@ if (process.env.NODE_ENV === 'development') {
   console.log('This message will only appear in development mode.');
 }
 else if (process.env.NODE_ENV === 'production') {
-  // console.log = function () { };
-  // console.error = function () { };
+  console.log = function () { };
 }
 
 ReactDOM.render(
