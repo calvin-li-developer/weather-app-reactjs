@@ -55,7 +55,7 @@ function App() {
         setdefaultMessage("Please Enter a City Name");
         setWeather({});
       }
-      else if (await isValidCity(query) == true) {
+      else if (await isValidCity(query) === true) {
         fetchWeather(query);
       } 
       else {
