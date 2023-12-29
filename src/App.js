@@ -36,10 +36,7 @@ const App = () => {
   const fetchWeatherData = async (query) => {
     try {
       const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
-      const result = await response.json();
-      setTimeout(() => {
-        console.log("Delayed for 1 second.");
-      }, 1000);      
+      const result = await response.json();   
       setWeather(result);
     } catch (error) {
       console.error('Error fetching weather data:', error.message);
