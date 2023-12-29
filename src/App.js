@@ -18,7 +18,7 @@ function App() {
   const isValidCity = async (city) => {
     try {
       // Fetch the Excel file from the URL
-      const response = await fetch(`/weather-app-reactjs/assets/cities_list.xlsx`)
+      const response = await fetch(`${process.env.PUBLIC_URL}/assets/cities_list.xlsx`)
       const buffer = await response.arrayBuffer();
       const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
 
