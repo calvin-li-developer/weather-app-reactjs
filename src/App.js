@@ -16,6 +16,10 @@ const App = () => {
   const [defaultMessage, setDefaultMessage] = useState('Please Enter a City Name');
   const [loading, setLoading] = useState(false);
 
+  const capitalizeEveryWord = (str) => {
+    return str.replace(/\b\w/g, (match) => match.toUpperCase());
+  };
+
   const isValidCity = async (city) => {
     try {
       const response = await fetch(`${process.env.PUBLIC_URL}/assets/cities_list.xlsx`);
@@ -57,9 +61,10 @@ const App = () => {
         setDefaultMessage('Please Enter a City Name');
         setWeather({});
       } else {
-        const isValid = await isValidCity(query);
+        const sanitizeQuery = capitalizeEveryWord(query);
+        const isValid = await isValidCity(sanitizeQuery);
         if (isValid) {
-          fetchWeather(query);
+          fetchWeather(sanitizeQuery);
         } else {
           setDefaultMessage(`"${query}" city not found in database`);
           setWeather({});
