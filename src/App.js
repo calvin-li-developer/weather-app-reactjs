@@ -36,7 +36,7 @@ const App = () => {
   const fetchWeatherData = async (query) => {
     try {
       const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
-      const result = await response.json();   
+      const result = await response.json();
       setWeather(result);
     } catch (error) {
       console.error('Error fetching weather data:', error.message);
@@ -99,14 +99,16 @@ const App = () => {
         {(loading || weather.main) ? (
           <div>
             <div className="location-box">
-              <div className="location">{weather.name}, {weather.sys.country}</div>
-              <div className="date">{dateBuilder(new Date())}</div>
+              <div className="location">
+                {loading ? 'Loading...' : `${weather.name}, ${weather.sys && weather.sys.country}`}
+              </div>
+              <div className="date">{loading ? '' : dateBuilder(new Date())}</div>
             </div>
             <div className="weather-box">
               <div className="temp">
-                {loading ? 'Loading...' : `${Math.round(weather.main.temp)}°C`}
+                {loading ? '' : `${Math.round(weather.main.temp)}°C`}
               </div>
-              <div className="weather">{weather.weather[0].main}</div>
+              <div className="weather">{loading ? '' : weather.weather && weather.weather[0].main}</div>
             </div>
           </div>
         ) : (
