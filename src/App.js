@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { debounce } from 'lodash';
-import * as XLSX from 'xlsx';
 
 const api = {
   key: process.env.REACT_APP_API_KEY || '',
@@ -20,19 +19,25 @@ const App = () => {
     return str.replace(/\b\w/g, (match) => match.toUpperCase());
   };
 
-  const isValidCity = async (city) => {
+  const isValidQuery = async (query) => {
     try {
-      const response = await fetch(`${process.env.PUBLIC_URL}/assets/cities_list.xlsx`);
-      const buffer = await response.arrayBuffer();
-      const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+      let city = query;
+      let country = "";
+      if (query.includes(',')) {
+        let queryArray = query.split(',');
+        city = queryArray[0];
+        country = queryArray[1];
+      }
+      const response = await fetch(`${process.env.PUBLIC_URL}/assets/city_list.json`);
+      const responseJSON = await response.json();
+      let validQuery = responseJSON.find(entry => entry.name === city);
+      if (country !== "") {
+        validQuery = responseJSON.find(entry => entry.name === city && entry.country === country);
+      }
 
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-
-      const cityJSONData = XLSX.utils.sheet_to_json(sheet);
-      return cityJSONData.some(obj => obj.name === city);
+      return validQuery;
     } catch (error) {
-      console.error('Error validating city:', error);
+      console.error('Error validating query:', error);
       return false;
     }
   };
@@ -61,9 +66,10 @@ const App = () => {
         setDefaultMessage('Please Enter a City Name');
         setWeather({});
       } else {
+        setDefaultMessage(`Loading...`);
         const sanitizeQuery = capitalizeEveryWord(query);
-        const isValid = await isValidCity(sanitizeQuery);
-        if (isValid) {
+        const validQuery = await isValidQuery(sanitizeQuery);
+        if (validQuery) {
           fetchWeather(sanitizeQuery);
         } else {
           setDefaultMessage(`"${query}" city not found in database`);
@@ -109,7 +115,7 @@ const App = () => {
               </div>
               <div className="date">{loading ? '' : dateBuilder(new Date())}</div>
             </div>
-            <div className="weather-box">
+            <div className={`${loading ? '' : "weather-box"}`}>
               <div className="temp">
                 {loading ? '' : `${Math.round(weather.main.temp)}°C`}
               </div>
