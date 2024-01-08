@@ -29,13 +29,13 @@ const App = () => {
   const isValidQuery = async (query) => {
     try {
       let city = query;
-      let country = "";
+      let countryCode = "";
 
       // Extract city and country from query
       if (query.includes(',')) {
         let queryArray = query.split(',');
         city = queryArray[0];
-        country = queryArray[1];
+        countryCode = queryArray[1].toUpperCase();
       }
 
       // Fetch city list from a JSON file
@@ -43,8 +43,8 @@ const App = () => {
       const responseJSON = await response.json();
 
       // Check if the city is present in the list (with optional country check)
-      const validQuery = responseJSON.find((entry) => entry.name === city && (country === "" || entry.country === country));
-      
+      const validQuery = responseJSON.find((entry) => entry.name === city && (countryCode === "" || entry.country === countryCode));
+
       return validQuery;
     } catch (error) {
       console.error('Error validating query:', error);
