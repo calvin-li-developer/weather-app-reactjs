@@ -30,9 +30,9 @@ const App = () => {
       }
       const response = await fetch(`${process.env.PUBLIC_URL}/assets/city_list.json`);
       const responseJSON = await response.json();
-      let validQuery = responseJSON.find(entry => entry.name === city);
+      let validQuery = responseJSON.find((entry) => entry.name === city);
       if (country !== "") {
-        validQuery = responseJSON.find(entry => entry.name === city && entry.country === country);
+        validQuery = responseJSON.find((entry) => entry.name === city && entry.country === country);
       }
 
       return validQuery;
