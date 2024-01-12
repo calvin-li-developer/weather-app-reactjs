@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   
 jobs:
-  extract:
+  updating-city-list-json:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,12 +15,12 @@ jobs:
 
     - name: Download and decompress gzipped file
       run: |
-        wget https://example.com/path/to/your/city.list.json.gz
-        gunzip city.list.json.gz
+        wget https://bulk.openweathermap.org/sample/city.list.min.json.gz
+        gunzip city.list.min.json.gz
 
     - name: Rename and Move JSON file to public/assets Directory
       run: |
-        mv city.list.json city_list.json
+        mv city.list.min.json city_list.json
         mv city_list.json public/assets/
 
     - name: Set Git user config
