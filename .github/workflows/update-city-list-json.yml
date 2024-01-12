@@ -14,8 +14,10 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download and decompress gzipped file
+      env:
+        URL: ${{ secrets.CITY_LIST_JSON_URL }}
       run: |
-        wget -q https://bulk.openweathermap.org/sample/city.list.min.json.gz
+        wget -q ${URL}
         gunzip city.list.min.json.gz
 
     - name: Rename and Move JSON file to public/assets Directory
