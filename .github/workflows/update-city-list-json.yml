@@ -35,6 +35,8 @@ jobs:
         git push origin master
 
     - name: Deploy
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        npm i && npm run predeploy && npm run deploy --force
+        npm i --slient && npm run predeploy && npm run deploy --force
         
