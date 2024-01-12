@@ -36,7 +36,9 @@ jobs:
 
     - name: Deploy
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        npm i --slient && npm run predeploy && gh-pages -d build -t ${{ secrets.GITHUB_TOKEN }}
+        npm i --slient && npm run predeploy
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+        gh-pages -d build
         
