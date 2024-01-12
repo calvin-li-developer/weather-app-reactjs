@@ -1,4 +1,4 @@
-name: updating-city-json
+name: update-city-list-json
 
 on:
   schedule:
