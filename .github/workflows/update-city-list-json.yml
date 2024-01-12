@@ -31,7 +31,7 @@ jobs:
     - name: Commit and push changes
       run: |
         git add public/assets/city_list.json
-        git commit -m "Update city_list.json"
+        git commit --allow-empty -m "Update city_list.json"
         git push origin master
 
     - name: Deploy
