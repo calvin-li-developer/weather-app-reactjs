@@ -22,7 +22,7 @@ const App = () => {
 
   // Function to capitalize every word in a string
   const sanitizeQuery = (str) => {
-    dataArray = str.split(',');
+    const dataArray = str.split(',');
     if (dataArray.length === 1) {
       return str.replace(/\b\w/g, (match) => match.toUpperCase());
     }
