@@ -15,7 +15,7 @@ jobs:
 
     - name: Download and decompress gzipped file
       run: |
-        wget https://bulk.openweathermap.org/sample/city.list.min.json.gz
+        wget -q https://bulk.openweathermap.org/sample/city.list.min.json.gz
         gunzip city.list.min.json.gz
 
     - name: Rename and Move JSON file to public/assets Directory
@@ -38,5 +38,5 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        npm i --slient && npm run predeploy && npm run deploy --force
+        npm i --slient && npm run predeploy && gh-pages -d build -t ${{ secrets.GITHUB_TOKEN }}
         
