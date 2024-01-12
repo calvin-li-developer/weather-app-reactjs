@@ -31,18 +31,19 @@ jobs:
         git config --global user.name ${{ secrets.GIT_USER_NAME }}
         
     - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git add public/assets/city_list.json
         git commit --allow-empty -m "Update city_list.json"
         git push origin master
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
 
     - name: Deploy
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
         REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       run: |
-        npm i --slient && npm run predeploy
-        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+        npm i --slient --loglevel error && npm run predeploy
         npm run deploy
         
