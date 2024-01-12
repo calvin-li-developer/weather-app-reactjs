@@ -1,4 +1,4 @@
-name: Updating city_list.json in public/assets
+name: updating-city-json
 
 on:
   schedule:
@@ -33,4 +33,8 @@ jobs:
         git add public/assets/city_list.json
         git commit -m "Update city_list.json"
         git push origin master
+
+    - name: Deploy
+      run: |
+        npm i && npm run predeploy && npm run deploy --force
         
