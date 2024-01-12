@@ -26,7 +26,7 @@ const App = () => {
     if (dataArray.length === 1) {
       return str.replace(/\b\w/g, (match) => match.toUpperCase());
     }
-    return `${dataArray[0].replace(/\b\w/g, (match) => match.toUpperCase())},${dataArray.slice(-1).toUpperCase()}`;
+    return `${dataArray[0].replace(/\b\w/g, (match) => match.toUpperCase())},${dataArray.slice(-1)[0].toUpperCase()}`;
   };
 
   // Function to check if a query is valid
