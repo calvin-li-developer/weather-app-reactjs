@@ -30,7 +30,7 @@ const App = () => {
   };
 
   // Function to check if a query is valid
-  const searchQuery = async (query) => {
+  const getSearchQuery = async (query) => {
     try {
       let city = query;
       let countryCode = "";
@@ -89,7 +89,7 @@ const App = () => {
         setWeather({});
       } else {
         setDefaultMessage('Loading...');
-        const searchQuery = await searchQuery(sanitizeQuery(query));
+        const searchQuery = await getSearchQuery(sanitizeQuery(query));
         if (searchQuery) {
           fetchWeather(searchQuery);
         } else {
