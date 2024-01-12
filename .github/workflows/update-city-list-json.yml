@@ -40,5 +40,5 @@ jobs:
       run: |
         npm i --slient && npm run predeploy
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
-        gh-pages -d build
+        npm run deploy
         
