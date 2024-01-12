@@ -24,9 +24,11 @@ const App = () => {
   const sanitizeQuery = (str) => {
     const dataArray = str.split(',');
     if (dataArray.length === 1) {
-      return str.replace(/\b\w/g, (match) => match.toUpperCase());
+      return str.replace(/\s+$/g, "").replace(/\b\w/g, (match) => match.toUpperCase());
+    } else if (dataArray.length === 2) {
+      return `${dataArray[0].replace(/\s+$/g, "").replace(/\b\w/g, (match) => match.toUpperCase())},${dataArray[1].toUpperCase().replace(/\s+$/g, "")}`;
     }
-    return `${dataArray[0].replace(/\b\w/g, (match) => match.toUpperCase())},${dataArray.slice(-1)[0].toUpperCase()}`;
+    return '';
   };
 
   // Function to check if a query is valid
