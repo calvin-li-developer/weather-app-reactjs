@@ -20,7 +20,7 @@ const App = () => {
   const [defaultMessage, setDefaultMessage] = useState('Please Enter a City Name');
   const [loading, setLoading] = useState(false);
 
-  // Function to capitalize every word in a string
+  // Function to sanitize query
   const sanitizeQuery = (str) => {
     const dataArray = str.split(',');
     if (dataArray.length === 1) {
@@ -31,7 +31,7 @@ const App = () => {
     return '';
   };
 
-  // Function to check if a query is valid
+  // Function to return a proper search query
   const getSearchQuery = async (query) => {
     try {
       let city = query;
@@ -50,7 +50,7 @@ const App = () => {
 
       // Check if the city is present in the list (with optional country check)
       const foundCity = responseJSON.find((entry) => entry.name === city && (countryCode === "" || entry.country === countryCode));
-      
+
       if (foundCity) {
         countryCode = countryCode === "" ? foundCity.country : countryCode
         return `${city},${countryCode}`;
