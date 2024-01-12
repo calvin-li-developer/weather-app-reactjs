@@ -21,12 +21,16 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   // Function to capitalize every word in a string
-  const capitalizeEveryWord = (str) => {
-    return str.replace(/\b\w/g, (match) => match.toUpperCase());
+  const sanitizeQuery = (str) => {
+    dataArray = str.split(',');
+    if (dataArray.length === 1) {
+      return str.replace(/\b\w/g, (match) => match.toUpperCase());
+    }
+    return `${dataArray[0].replace(/\b\w/g, (match) => match.toUpperCase())},${dataArrayslice(-1).toUpperCase()}`;
   };
 
   // Function to check if a query is valid
-  const isValidQuery = async (query) => {
+  const searchQuery = async (query) => {
     try {
       let city = query;
       let countryCode = "";
@@ -43,9 +47,13 @@ const App = () => {
       const responseJSON = await response.json();
 
       // Check if the city is present in the list (with optional country check)
-      const validQuery = responseJSON.find((entry) => entry.name === city && (countryCode === "" || entry.country === countryCode));
-
-      return validQuery;
+      const foundCity = responseJSON.find((entry) => entry.name === city && (countryCode === "" || entry.country === countryCode));
+      
+      if (foundCity) {
+        countryCode = countryCode === "" ? foundCity.country : countryCode
+        return `${city},${countryCode}`;
+      }
+      return false;
     } catch (error) {
       console.error('Error validating query:', error);
       return false;
@@ -81,10 +89,9 @@ const App = () => {
         setWeather({});
       } else {
         setDefaultMessage('Loading...');
-        const sanitizeQuery = capitalizeEveryWord(query);
-        const validQuery = await isValidQuery(sanitizeQuery);
-        if (validQuery) {
-          fetchWeather(sanitizeQuery);
+        const searchQuery = await searchQuery(sanitizeQuery(query));
+        if (searchQuery) {
+          fetchWeather(searchQuery);
         } else {
           setDefaultMessage(`"${query}" city not found in the database`);
           setWeather({});
