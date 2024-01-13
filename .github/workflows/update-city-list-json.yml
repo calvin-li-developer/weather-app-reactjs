@@ -35,10 +35,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git add public/assets/city_list.json
-        git commit --allow-empty -m "Update city_list.json"
-        git push origin master
-        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
-
+        if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Your commit message"
+            git push origin master
+            git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+        else
+            echo "No changes to commit."
+        fi
     - name: Deploy
       env:
         REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
