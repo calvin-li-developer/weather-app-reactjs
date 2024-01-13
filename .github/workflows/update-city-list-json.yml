@@ -39,10 +39,12 @@ jobs:
             git commit -m "Your commit message"
             git push origin master
             git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+            echo "COMMIT=true" >> $GITHUB_ENV
         else
             echo "No changes to commit."
         fi
     - name: Deploy
+      if: ${{ env.COMMIT == 'true' }}
       env:
         REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
         REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
