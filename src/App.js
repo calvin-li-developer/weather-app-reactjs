@@ -1,5 +1,6 @@
 // Importing the necessary packages
 import React, { useState, useMemo } from 'react';
+import axios from 'axios';
 import { debounce } from 'lodash';
 
 // API configuration
@@ -19,7 +20,7 @@ const App = () => {
   const [weather, setWeather] = useState({});
   const [defaultMessage, setDefaultMessage] = useState('Please Enter a City Name');
   const [loading, setLoading] = useState(false);
-
+  
   // Function to sanitize query
   const sanitizeQuery = (str) => {
     const dataArray = str.split(',');
@@ -66,11 +67,16 @@ const App = () => {
   const fetchWeatherData = async (query) => {
     try {
       // Fetch weather data from the API
-      const response = await fetch(`${api.url}weather?q=${query}&units=metric&appid=${api.key}`);
-      const result = await response.json();
+      const response = await axios.get(`${api.url}weather`, {
+        params: {
+          q: query,
+          units: 'metric',
+          appid: api.key
+        }
+      });
+      const result = await response.data;
       setWeather(result);
     } catch (error) {
-      console.error('Error fetching weather data:', error.message);
       setDefaultMessage('Error fetching weather data. Please try again.');
     } finally {
       setLoading(false);
