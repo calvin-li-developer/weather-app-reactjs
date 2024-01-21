@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/absproxy/3000/static/css/main.e842c151.css",
-    "main.js": "/absproxy/3000/static/js/main.f9065ee0.js",
-    "static/media/cold-bg.jpg": "/absproxy/3000/static/media/cold-bg.e849075a80770e8c799a.jpg",
-    "static/media/warm-bg.jpg": "/absproxy/3000/static/media/warm-bg.ee1257e0f65df6fa4456.jpg",
-    "index.html": "/absproxy/3000/index.html",
-    "main.e842c151.css.map": "/absproxy/3000/static/css/main.e842c151.css.map",
-    "main.f9065ee0.js.map": "/absproxy/3000/static/js/main.f9065ee0.js.map"
+    "main.css": "/weather-app-reactjs/static/css/main.9561d961.css",
+    "main.js": "/weather-app-reactjs/static/js/main.9be099c8.js",
+    "static/media/cold-bg.jpg": "/weather-app-reactjs/static/media/cold-bg.e849075a80770e8c799a.jpg",
+    "static/media/warm-bg.jpg": "/weather-app-reactjs/static/media/warm-bg.ee1257e0f65df6fa4456.jpg",
+    "index.html": "/weather-app-reactjs/index.html",
+    "main.9561d961.css.map": "/weather-app-reactjs/static/css/main.9561d961.css.map",
+    "main.9be099c8.js.map": "/weather-app-reactjs/static/js/main.9be099c8.js.map"
   },
   "entrypoints": [
-    "static/css/main.e842c151.css",
-    "static/js/main.f9065ee0.js"
+    "static/css/main.9561d961.css",
+    "static/js/main.9be099c8.js"
   ]
 }
