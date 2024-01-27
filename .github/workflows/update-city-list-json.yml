@@ -18,7 +18,8 @@ jobs:
       env:
         URL: ${{ secrets.CITY_LIST_JSON_URL }}
       run: |
-        if wget -q ${URL} then;
+        wget -q ${URL}
+        if [  $? -eq 0 ]; then
           gunzip city.list.min.json.gz
         else
           echo "ERROR: Cannot download city JSON file." && exit 1
