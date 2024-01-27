@@ -43,7 +43,7 @@ jobs:
         if [ -n "$(git status --porcelain)" ]; then
             git commit -m "Your commit message"
             git push origin master
-            git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+            git remote set-url origin https://git:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
             echo "COMMIT=true" >> $GITHUB_ENV
         else
             echo "No changes to commit."
