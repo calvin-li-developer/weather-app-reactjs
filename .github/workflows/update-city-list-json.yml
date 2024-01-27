@@ -2,7 +2,7 @@ name: update-city-list-json
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Run once daily at midnight
+    - cron: '0 */6 * * *'
   workflow_dispatch:
   
 jobs:
