@@ -20,6 +20,7 @@ jobs:
       run: |
         wget -q ${URL}
         if [  $? -eq 0 ]; then
+          echo "Download Successful"
           gunzip city.list.min.json.gz
         else
           echo "ERROR: Cannot download city JSON file." && exit 1
