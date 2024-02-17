@@ -43,6 +43,7 @@ jobs:
           for branch in $(git branch -r | grep -v -E "$EXCLUDED_STRINGS"); do
             git checkout $branch
             git merge $DEFAULT_BRANCH
-            git commit -am "Merge changes from $DEFAULT_BRANCH"
+            git add .
+            git commit -m "Merge changes from $DEFAULT_BRANCH"
             git push origin $branch
           done
