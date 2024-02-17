@@ -37,7 +37,7 @@ jobs:
           DEFAULT_BRANCH=${{ github.event.repository.default_branch }}
           
           # Loop through your branches and merge changes
-          branches=$(git branch -r | grep -v "$DEFAULT_BRANCH")
+          branches=$(git branch -r | grep -v "$DEFAULT_BRANCH" | awk '{gsub(/^[^\/]+\//,"",$1); print $1}')
           for branch in $branches; do
             echo "git checkout $branch" && git checkout $branch
             git merge $DEFAULT_BRANCH
