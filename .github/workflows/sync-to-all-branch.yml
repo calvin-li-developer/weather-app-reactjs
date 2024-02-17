@@ -36,15 +36,11 @@ jobs:
         run: |
           DEFAULT_BRANCH=${{ github.event.repository.default_branch }}
           
-          #  Check if there are any branches other than the default branch
-          if [ "$(git branch --format='%(refname:short)' | grep -v "$DEFAULT_BRANCH" | wc -l)" -gt 0 ]; then
-            # Loop through your branches and merge changes
-            for branch in $(git branch --format='%(refname:short)' | grep -v "$DEFAULT_BRANCH"); do
-              git checkout $branch
-              git merge $DEFAULT_BRANCH
-              git commit -am "Merge changes from $DEFAULT_BRANCH"
-              git push origin $branch
-            done
-          else
-            echo "No other branches found."
-          fi
+          # Loop through your branches and merge changes
+          branches=$(git branch -r | grep -v "$DEFAULT_BRANCH"
+          for branch in $branches; do
+            echo "git checkout $branch" && git checkout $branch
+            git merge $DEFAULT_BRANCH
+            git commit -am "Merge changes from $DEFAULT_BRANCH"
+            echo "git push origin $branch" && git push origin $branch
+          done
