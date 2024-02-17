@@ -21,6 +21,7 @@ jobs:
         run: |
           git config --global user.email ${{ secrets.GIT_USER_EMAIL }}
           git config --global user.name ${{ secrets.GIT_USER_NAME }}
+          git config --global advice.detachedHead false
 
       - name: Check if .github folder was modified
         id: check_changes
@@ -42,8 +43,10 @@ jobs:
           # Loop through your branches and merge changes
           for branch in $(git branch -r | grep -v -E "$EXCLUDED_STRINGS"); do
             git checkout $branch
-            git merge $DEFAULT_BRANCH
-            git add .
-            git commit -m "Merge changes from $DEFAULT_BRANCH"
-            git push origin $branch
+            git fetch origin $DEFAULT_BRANCH
+            git rebase origin/$DEFAULT_BRANCH
+            if ! git diff-index --quiet HEAD --; then
+              git commit -am "Merge changes from $DEFAULT_BRANCH"
+              git push origin $branch
+            fi
           done
