@@ -34,10 +34,13 @@ jobs:
       - name: Merge changes into other branches
         if: env.MODIFIED == 'true'
         run: |
-          DEFAULT_BRANCH=${{ github.event.repository.default_branch }}|gh-pages
+          DEFAULT_BRANCH=${{ github.event.repository.default_branch }}
+
+          # Define strings to exclude
+          EXCLUDED_STRINGS="$DEFAULT_BRANCH|origin/gh-pages"
           
           # Loop through your branches and merge changes
-          for branch in $(git branch -r | grep -v -E "$DEFAULT_BRANCH"); do
+          for branch in $(git branch -r | grep -v -E "$EXCLUDED_STRINGS"); do
             git checkout $branch
             git merge $DEFAULT_BRANCH
             git commit -am "Merge changes from $DEFAULT_BRANCH"
