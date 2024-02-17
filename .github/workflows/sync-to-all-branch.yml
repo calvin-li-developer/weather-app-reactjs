@@ -46,5 +46,5 @@ jobs:
             git checkout $DEFAULT_BRANCH -- .github/
             git add .github/
             git commit -m "Sync .github folder from $SOURCE_BRANCH"
-            git push origin $branch --all
+            git push origin $branch
           done
