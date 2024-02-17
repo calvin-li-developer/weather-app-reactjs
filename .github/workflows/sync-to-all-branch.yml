@@ -41,7 +41,7 @@ jobs:
           EXCLUDED_STRINGS="$DEFAULT_BRANCH|origin/gh-pages"
           
           # Loop through your branches and merge changes
-          for branch in $(git branch -r | grep -v -E "$EXCLUDED_STRINGS"); do
+          for branch in $(git branch -r | grep -v -E "$EXCLUDED_STRINGS" | awk '{gsub(/^[^\/]+\//,"",$1); print $1}'); do
             git checkout $branch
             git checkout $DEFAULT_BRANCH -- .github/
             git add .github/
