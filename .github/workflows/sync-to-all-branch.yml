@@ -1,11 +1,11 @@
-name: Merge master Changes to All Branch
+name: merge-master-changes-to-all-branch
 
 on:
   push:
     paths:
       - '.github/**'
     branches:
-      - $default_branch
+      - master
 
 jobs:
   merge-default-changes:
