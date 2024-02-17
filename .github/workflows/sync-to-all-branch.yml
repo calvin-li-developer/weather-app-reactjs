@@ -14,13 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Set git user config
-        run: |
-          git config --global user.email ${{ secrets.GIT_USER_EMAIL }}
-          git config --global user.name ${{ secrets.GIT_USER_NAME }}
 
       - name: Check if .github folder was modified
         id: check_changes
@@ -37,10 +30,8 @@ jobs:
           DEFAULT_BRANCH=${{ github.event.repository.default_branch }}
           
           # Loop through your branches and merge changes
-          branches=$(git branch -r | grep -v "$DEFAULT_BRANCH" | awk '{gsub(/^[^\/]+\//,"",$1); print $1}')
-          for branch in $branches; do
-            echo "git checkout $branch" && git checkout $branch
-            git merge $DEFAULT_BRANCH
-            git commit -am "Merge changes from $DEFAULT_BRANCH"
-            echo "git push origin $branch" && git push origin $branch
+          for branch in $(git branch --format='%(refname:short)' | grep -v "$DEFAULT_BRANCH"); do
+            git checkout $branch
+            git merge $DEFAULT_BRANCH --no-edit
+            git push --force
           done
