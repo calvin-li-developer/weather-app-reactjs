@@ -43,10 +43,8 @@ jobs:
           # Loop through your branches and merge changes
           for branch in $(git branch -r | grep -v -E "$EXCLUDED_STRINGS"); do
             git checkout $branch
-            git fetch origin $DEFAULT_BRANCH
-            git rebase origin/$DEFAULT_BRANCH
-            if ! git diff-index --quiet HEAD --; then
-              git commit -am "Merge changes from $DEFAULT_BRANCH"
-              git push origin $branch
-            fi
+            git checkout $DEFAULT_BRANCH -- .github/
+            git add .github/
+            git commit -m "Sync .github folder from $SOURCE_BRANCH"
+            git push origin $branch
           done
