@@ -1,4 +1,4 @@
-name: merge-master-changes-to-all-branch
+name: merge-workflow-master-changes-to-all-branch
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  merge-default-changes:
+  merge-workflow-master-changes:
     runs-on: ubuntu-latest
 
     steps:
