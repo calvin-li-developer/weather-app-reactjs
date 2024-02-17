@@ -40,5 +40,5 @@ jobs:
           for branch in $(git branch -r | grep -v "$DEFAULT_BRANCH"); do
             git checkout $branch
             git merge $DEFAULT_BRANCH --no-edit
-            git push
+            git push origin HEAD:$branch
           done
