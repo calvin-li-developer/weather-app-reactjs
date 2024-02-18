@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
+  push:
+    branches:
+      - master
   
 jobs:
   updating-city-list-json:
@@ -34,13 +37,13 @@ jobs:
 
     - name: Rename and Move JSON file to public/assets Directory
       run: |
-        mv city.list.min.json public/assets/city_list.json
+        mv city.list.min.json src/assets/city_list.json
         
     - name: Commit and push changes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git add public/assets/city_list.json
+        git add src/assets/city_list.json
         if [ -n "$(git status --porcelain)" ]; then
             git commit -m "Your commit message"
             git push origin master

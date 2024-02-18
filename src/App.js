@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import axios from 'axios';
 import { debounce } from 'lodash';
+import cityListJSON from './assets/city_list.json';
 
 // API configuration
 const api = {
@@ -45,9 +46,8 @@ const App = () => {
         countryCode = queryArray[1].toUpperCase();
       }
 
-      // Fetch city list from a JSON file
-      const response = await fetch(`${process.env.PUBLIC_URL}/assets/city_list.json`);
-      const responseJSON = await response.json();
+      // Get city list from a JSON file
+      const responseJSON = cityListJSON;
 
       // Check if the city is present in the list (with optional country check)
       const foundCity = responseJSON.find((entry) => entry.name === city && (countryCode === "" || entry.country === countryCode));
