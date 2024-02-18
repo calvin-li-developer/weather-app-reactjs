@@ -38,7 +38,7 @@ jobs:
           echo "ERROR: Cannot download city JSON file." && exit 1
         fi
 
-    - name: Rename and Move JSON file to public/assets Directory
+    - name: Rename and Move JSON file to src/assets Directory
       run: |
         mv city.list.min.json src/assets/city_list.json
         
