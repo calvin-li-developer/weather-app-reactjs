@@ -57,7 +57,7 @@ jobs:
         fi
         
     - name: Deploy
-      if: ${{ github.event.inputs.force_deploy == 'true' || env.COMMIT == 'true' }}
+      if: ${{ github.event_name == 'push' || github.event.inputs.force_deploy == 'true' || env.COMMIT == 'true' }}
       env:
         REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
         REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
