@@ -21,31 +21,32 @@ const App = () => {
   const [weather, setWeather] = useState({});
   const [defaultMessage, setDefaultMessage] = useState('Please Enter a City Name');
   const [loading, setLoading] = useState(false);
+
+  const removeTrailingSpace = (str) => {
+    return str.replace(/\s+$/g, "");
+  };
+
+  const capitalizeFirstLetter = (str) => {
+    return str.replace(/\b\w/g, (firstLetter) => firstLetter.toUpperCase());
+  };
   
   // Function to sanitize query
   const sanitizeQuery = (str) => {
     const dataArray = str.split(',');
+    const city = capitalizeFirstLetter(removeTrailingSpace(dataArray[0]));
+
     if (dataArray.length === 1) {
-      return str.replace(/\s+$/g, "").replace(/\b\w/g, (match) => match.toUpperCase());
+      return [city];
     } else if (dataArray.length === 2) {
-      return `${dataArray[0].replace(/\s+$/g, "").replace(/\b\w/g, (match) => match.toUpperCase())},${dataArray[1].toUpperCase().replace(/\s+$/g, "")}`;
+      const countryCode = removeTrailingSpace(dataArray[1].toUpperCase());
+      return [city, countryCode];
     }
-    return '';
+    return [''];
   };
 
   // Function to return a proper search query
-  const getSearchQuery = async (query) => {
+  const getSearchQuery = async (city, countryCode = "") => {
     try {
-      let city = query;
-      let countryCode = "";
-
-      // Extract city and country from query
-      if (query.includes(',')) {
-        let queryArray = query.split(',');
-        city = queryArray[0];
-        countryCode = queryArray[1].toUpperCase();
-      }
-
       // Get city list from a JSON file
       const responseJSON = cityListJSON;
 
@@ -97,7 +98,7 @@ const App = () => {
         setWeather({});
       } else {
         setDefaultMessage('Loading...');
-        const searchQuery = await getSearchQuery(sanitizeQuery(query));
+        const searchQuery = await getSearchQuery(...sanitizeQuery(query));
         if (searchQuery) {
           fetchWeather(searchQuery);
         } else {
