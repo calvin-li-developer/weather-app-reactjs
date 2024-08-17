@@ -33,12 +33,12 @@ const App = () => {
   // Function to sanitize query
   const sanitizeQuery = (str) => {
     const dataArray = str.split(',');
-    const city = capitalizeFirstLetter(removeTrailingSpace(dataArray[0]));
+    const city = capitalizeFirstLetter(removeTrailingSpace(dataArray[0].trim()));
 
     if (dataArray.length === 1) {
       return [city];
     } else if (dataArray.length === 2) {
-      const countryCode = removeTrailingSpace(dataArray[1].toUpperCase());
+      const countryCode = removeTrailingSpace(dataArray[1].toUpperCase().trim());
       return [city, countryCode];
     }
     return [''];
