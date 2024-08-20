@@ -66,9 +66,9 @@ const App = () => {
   };
 
   // Function to fetch weather data from the API
-  const fetchWeatherData = async () => {
+  const fetchWeatherData = async (searchQuery) => {
     setWeather({});
-    const apiQuery = await getAPIQuery(...sanitizeQuery(query));
+    const apiQuery = await getAPIQuery(...sanitizeQuery(searchQuery));
 
     if (apiQuery === '') {
       setLoading(false);
@@ -96,9 +96,9 @@ const App = () => {
   };
 
   // Debounced function to fetch weather data
-  const fetchWeather = debounce(async () => {
+  const fetchWeather = debounce(async (searchQuery) => {
     setLoading(true);
-    await fetchWeatherData();
+    await fetchWeatherData(searchQuery);
   }, DEBOUNCE_DELAY);
 
   // Function to handle the search when the Enter key is pressed
@@ -111,7 +111,7 @@ const App = () => {
       }
 
       setDefaultMessage('Loading...');
-      fetchWeather();
+      fetchWeather(query);
     }
     return
   };
