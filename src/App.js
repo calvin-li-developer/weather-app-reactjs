@@ -60,16 +60,25 @@ const App = () => {
         countryCode = countryCode === "" ? foundCity.country : countryCode
         return `${city},${countryCode}`;
       }
-      return city;
+
+      setDefaultMessage(`"${apiQuery}" city not found in the database`);
+      return '';
     } catch (error) {
       console.error('Error validating query:', error);
-      return city;
+      return '';
     }
   };
 
   // Function to fetch weather data from the API
   const fetchWeatherData = async () => {
+    
     const apiQuery = await getAPIQuery(...sanitizeQuery(query));
+
+    if (apiQuery == '') {
+      setLoading(false);
+      setQuery('');
+      return
+    } 
 
     try {
       // Fetch weather data from the API
@@ -81,10 +90,9 @@ const App = () => {
         }
       });
       const result = await response.data;
-      setWeather(result);
+      setWeather(result.cod === '200' ? result : {});
     } catch (error) {
-      setDefaultMessage(`"${apiQuery}" city not found in the database`);
-      setWeather({});
+      console.log("ERROR (fetchWeatherData):", error);
     } finally {
       setLoading(false);
       setQuery('');
