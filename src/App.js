@@ -37,15 +37,18 @@ const App = () => {
 
     if (dataArray.length === 1) {
       return [city];
-    } else if (dataArray.length === 2) {
+    } 
+    
+    if (dataArray.length === 2) {
       const countryCode = removeTrailingSpace(dataArray[1].toUpperCase().trim());
       return [city, countryCode];
     }
+
     return [''];
   };
 
   // Function to return a proper search query
-  const getSearchQuery = async (city, countryCode = "") => {
+  const getAPIQuery = async (city, countryCode = "") => {
     try {
       // Get city list from a JSON file
       const responseJSON = cityListJSON;
@@ -65,12 +68,14 @@ const App = () => {
   };
 
   // Function to fetch weather data from the API
-  const fetchWeatherData = async (query) => {
+  const fetchWeatherData = async () => {
+    const apiQuery = await getAPIQuery(...sanitizeQuery(query));
+
     try {
       // Fetch weather data from the API
       const response = await axios.get(`${api.url}weather`, {
         params: {
-          q: query,
+          q: apiQuery,
           units: 'metric',
           appid: api.key
         }
@@ -78,16 +83,18 @@ const App = () => {
       const result = await response.data;
       setWeather(result);
     } catch (error) {
-      setDefaultMessage('Error fetching weather data. Please try again.');
+      setDefaultMessage(`"${apiQuery}" city not found in the database`);
+      setWeather({});
     } finally {
       setLoading(false);
+      setQuery('');
     }
   };
 
   // Debounced function to fetch weather data
-  const fetchWeather = debounce(async (query) => {
+  const fetchWeather = debounce(async () => {
     setLoading(true);
-    await fetchWeatherData(query);
+    await fetchWeatherData();
   }, DEBOUNCE_DELAY);
 
   // Function to handle the search when the Enter key is pressed
@@ -96,18 +103,13 @@ const App = () => {
       if (query === '') {
         setDefaultMessage('Please Enter a City Name');
         setWeather({});
-      } else {
-        setDefaultMessage('Loading...');
-        const searchQuery = await getSearchQuery(...sanitizeQuery(query));
-        if (searchQuery) {
-          fetchWeather(searchQuery);
-        } else {
-          setDefaultMessage(`"${query}" city not found in the database`);
-          setWeather({});
-        }
+        return
       }
-      setQuery('');
+
+      setDefaultMessage('Loading...');
+      fetchWeather();
     }
+    return
   };
 
   // Memoized function to build the date
