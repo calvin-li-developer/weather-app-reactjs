@@ -60,10 +60,10 @@ const App = () => {
         countryCode = countryCode === "" ? foundCity.country : countryCode
         return `${city},${countryCode}`;
       }
-      return false;
+      return city;
     } catch (error) {
       console.error('Error validating query:', error);
-      return false;
+      return city;
     }
   };
 
