@@ -71,7 +71,7 @@ const App = () => {
 
   // Function to fetch weather data from the API
   const fetchWeatherData = async () => {
-    
+    setWeather({});
     const apiQuery = await getAPIQuery(...sanitizeQuery(query));
 
     if (apiQuery === '') {
