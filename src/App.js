@@ -22,12 +22,12 @@ const App = () => {
   const [defaultMessage, setDefaultMessage] = useState('Please Enter a City Name');
   const [loading, setLoading] = useState(false);
 
-  const removeTrailingSpace = (str) => {
+  const removeTrailingSpace = async (str) => {
     return str.replace(/\s+$/g, "");
   };
   
   // Function to sanitize query
-  const sanitizeQuery = (str) => {
+  const sanitizeQuery = async (str) => {
     const dataArray = str.split(',');
     const city = removeTrailingSpace(dataArray[0].trim());
 
