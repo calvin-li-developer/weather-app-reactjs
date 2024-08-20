@@ -61,7 +61,7 @@ const App = () => {
         return `${city},${countryCode}`;
       }
 
-      setDefaultMessage(`"${city}" city not found in the database`);
+      setDefaultMessage(`"${query}" city not found in the database`);
       return '';
     } catch (error) {
       console.error('Error validating query:', error);
