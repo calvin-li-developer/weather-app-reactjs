@@ -74,7 +74,7 @@ const App = () => {
     
     const apiQuery = await getAPIQuery(...sanitizeQuery(query));
 
-    if (apiQuery == '') {
+    if (apiQuery === '') {
       setLoading(false);
       setQuery('');
       return
