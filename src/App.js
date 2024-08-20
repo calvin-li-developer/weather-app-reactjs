@@ -90,7 +90,7 @@ const App = () => {
         }
       });
       const result = await response.data;
-      setWeather(result.cod === '200' ? result : {});
+      setWeather(result.cod === 200 ? result : {});
     } catch (error) {
       console.log("ERROR (fetchWeatherData):", error);
     } finally {
