@@ -54,7 +54,7 @@ const App = () => {
 
       if (foundCity) {
         countryCode = countryCode === "" ? foundCity.country : countryCode
-        return `${city},${countryCode}`;
+        return `${foundCity.name},${countryCode}`;
       }
 
       setDefaultMessage(`"${query}" city not found in the database`);
