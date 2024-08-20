@@ -22,7 +22,7 @@ const App = () => {
   const [defaultMessage, setDefaultMessage] = useState('Please Enter a City Name');
   const [loading, setLoading] = useState(false);
 
-  const removeTrailingSpace = async (str) => {
+  const removeTrailingSpace = (str) => {
     return str.replace(/\s+$/g, "");
   };
   
