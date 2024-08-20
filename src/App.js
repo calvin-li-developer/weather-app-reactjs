@@ -25,15 +25,11 @@ const App = () => {
   const removeTrailingSpace = (str) => {
     return str.replace(/\s+$/g, "");
   };
-
-  const capitalizeFirstLetter = (str) => {
-    return str.replace(/\b\w/g, (firstLetter) => firstLetter.toUpperCase());
-  };
   
   // Function to sanitize query
   const sanitizeQuery = (str) => {
     const dataArray = str.split(',');
-    const city = capitalizeFirstLetter(removeTrailingSpace(dataArray[0].trim()));
+    const city = removeTrailingSpace(dataArray[0].trim());
 
     if (dataArray.length === 1) {
       return [city];
@@ -54,7 +50,7 @@ const App = () => {
       const responseJSON = cityListJSON;
 
       // Check if the city is present in the list (with optional country check)
-      const foundCity = responseJSON.find((entry) => entry.name === city && (countryCode === "" || entry.country === countryCode));
+      const foundCity = responseJSON.find((entry) => entry.name.toLowerCase() === city.toLowerCase() && (countryCode === "" || entry.country === countryCode));
 
       if (foundCity) {
         countryCode = countryCode === "" ? foundCity.country : countryCode
