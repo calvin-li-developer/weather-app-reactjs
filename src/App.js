@@ -27,7 +27,7 @@ const App = () => {
   };
   
   // Function to sanitize query
-  const sanitizeQuery = async (str) => {
+  const sanitizeQuery = (str) => {
     const dataArray = str.split(',');
     const city = removeTrailingSpace(dataArray[0].trim());
 
@@ -70,13 +70,8 @@ const App = () => {
     setWeather({});
     const apiQuery = await getAPIQuery(...sanitizeQuery(searchQuery));
 
-    if (apiQuery === '') {
-      setLoading(false);
-      setQuery('');
-      return
-    } 
-
-    try {
+    if (apiQuery) {
+      try {
       // Fetch weather data from the API
       const response = await axios.get(`${api.url}weather`, {
         params: {
@@ -87,12 +82,13 @@ const App = () => {
       });
       const result = await response.data;
       setWeather(result.cod === 200 ? result : {});
-    } catch (error) {
-      console.log("ERROR (fetchWeatherData):", error);
-    } finally {
-      setLoading(false);
-      setQuery('');
-    }
+      } catch (error) {
+        console.log("ERROR (fetchWeatherData):", error);
+      }
+    } 
+    setLoading(false);
+    setQuery('');
+    return
   };
 
   // Debounced function to fetch weather data
